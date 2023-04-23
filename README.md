@@ -4,13 +4,13 @@ Das Account System ist eine einfache Anwendung, die grundlegende Bankfunktionen 
 
 # Geschätfsprozesse für jeden API- Endpunkt 
 
-![Business-Processes](bank-acc-system\images\business-process-1.png)
+![Business-Processes](https://github.com/Jaxon412/bank-acc-app/blob/master/images/business-process-1.png)
 
-![Business-Processes](bank-acc-system\images\business-process-2.png)
+![Business-Processes](https://github.com/Jaxon412/bank-acc-app/blob/master/images/business-process-2.png)
 
 # Entity-Relationship-Modell
 
-![ER-Modell](bank-acc-system\images\er-modell.jpg)
+![ER-Modell](https://github.com/Jaxon412/bank-acc-app/blob/master/images/er-modell.jpg)
 
 ## Klassen
 
