@@ -81,11 +81,11 @@ To test and interact with the API, you can use Swagger UI. It provides an intera
 
 
 ## Dependencies
-Spring Boot
-Spring Data JPA
-Hibernate
-H2 Embedded Database (http://localhost:8080/h2-console)
-Spring Security 
+* Spring Boot
+* Spring Data JPA
+* Hibernate
+* H2 Embedded Database (http://localhost:8080/h2-console)
+* Spring Security 
 
 
 
