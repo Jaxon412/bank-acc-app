@@ -2,6 +2,8 @@ package com.goetz.accsystem.service;
 
 import java.time.LocalDate;
 import java.util.Optional;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.goetz.accsystem.dto.CustomerRegisterDTO;
 import com.goetz.accsystem.entity.Customer;
@@ -19,17 +21,21 @@ public class CustomerTokenService {
     private final CustomerRepository customerRepository;
     private final TokenRepository tokenRepository;
     private final TokenGenerator tokenGenerator;
+    private final PasswordEncoder passwordEncoder;
 
-    public CustomerTokenService(CustomerRepository customerRepository, TokenRepository tokenRepository,TokenGenerator tokenGenerator) {
+    public CustomerTokenService(CustomerRepository customerRepository, TokenRepository tokenRepository,TokenGenerator tokenGenerator, PasswordEncoder passwordEncoder) {
         this.customerRepository = customerRepository;
         this.tokenRepository = tokenRepository;
         this.tokenGenerator = tokenGenerator;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public CustomerRegisterDTO addCustomer(CustomerRegisterDTO customerDTO) {
 
-        //create customer with customerDTO
-        Customer customer = new Customer(customerDTO.email(), customerDTO.password(), customerDTO.firstname(), customerDTO.lastname(), LocalDate.parse(customerDTO.birthday()));
+        
+        //create customer with customerDTO and encode password 
+        Customer customer = new Customer(customerDTO.email(), passwordEncoder.encode(customerDTO.password()), customerDTO.firstname(), 
+                                                                     customerDTO.lastname(), LocalDate.parse(customerDTO.birthday()));
         
         //create Token & create relationship between Token & Customer
         Token token = new Token (tokenGenerator.getToken(), customer);
@@ -41,7 +47,7 @@ public class CustomerTokenService {
 
         //create customerDTO with Customer for response
         CustomerRegisterDTO savedCustomerDTO = new CustomerRegisterDTO(savedCustomer.getEmail(), savedCustomer.getPassword(), 
-          savedCustomer.getFirstname(), savedCustomer.getLastname(), savedCustomer.getBirthday().toString());
+                          savedCustomer.getFirstname(), savedCustomer.getLastname(), savedCustomer.getBirthday().toString());
 
         return savedCustomerDTO;
     }

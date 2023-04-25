@@ -34,6 +34,7 @@ public class PaymentServiceTest {
     @BeforeEach
     public void setUp() {
 
+        //setting objects 
         account = new Account();
         account.setId(1L);
         account.setCreditLimit(1000d);
@@ -43,14 +44,29 @@ public class PaymentServiceTest {
     }
 
     @Test
-    public void testDeposit_success() throws MaximumDepositException {
+    public void testDeposit_success_with_presentTransaction() throws MaximumDepositException {
 
         Double depositAmount = 500d;
+
+        //define the behavior of mocks when methods are called 
         when(transactionRepository.findLatestTransactionByAccountId(account.getId())).thenReturn(Optional.of(transaction));
 
         Double updatedAccountBalance = paymentService.deposit(account, depositAmount);
 
         assertEquals(1500d, updatedAccountBalance);
+    }
+
+    @Test
+    public void testDeposit_success_without_presentTransaction() throws MaximumDepositException {
+
+        Double depositAmount = 500d;
+
+        //define the behavior of mocks when methods are called 
+        when(transactionRepository.findLatestTransactionByAccountId(account.getId())).thenReturn(Optional.ofNullable(null));
+
+        Double updatedAccountBalance = paymentService.deposit(account, depositAmount);
+
+        assertEquals(500d, updatedAccountBalance);
     }
 
     @Test
@@ -63,7 +79,7 @@ public class PaymentServiceTest {
     }
 
     @Test
-    public void testWithdraw_success() throws AccountNotCoverdException {
+    public void testWithdraw_success_with_presentTransaction() throws AccountNotCoverdException {
 
         Double withdrawAmount = 800d;
         when(transactionRepository.findLatestTransactionByAccountId(account.getId())).thenReturn(Optional.of(transaction));
@@ -71,6 +87,17 @@ public class PaymentServiceTest {
         Double updatedAccountBalance = paymentService.withdraw(account, withdrawAmount);
 
         assertEquals(200d, updatedAccountBalance);
+    }
+
+    @Test
+    public void testWithdraw_success_without_presentTransaction() throws AccountNotCoverdException {
+
+        Double withdrawAmount = 800d;
+        when(transactionRepository.findLatestTransactionByAccountId(account.getId())).thenReturn(Optional.ofNullable(null));
+
+        Double updatedAccountBalance = paymentService.withdraw(account, withdrawAmount);
+
+        assertEquals(-800d, updatedAccountBalance);
     }
 
     @Test

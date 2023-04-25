@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class FailedToCreateAccountException extends RuntimeException{
 
     public FailedToCreateAccountException(String message) {
-
         super(message);
     }
     

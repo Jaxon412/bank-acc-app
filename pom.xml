@@ -49,6 +49,24 @@
 			<version>2.1.214</version>
 			<scope>runtime</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-bom</artifactId>
+			<version>6.0.2</version>
+			<type>pom</type>
+			<scope>import</scope>
+    	</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-web</artifactId>
+  		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+		</dependency>
+
 		
 		 <!-- JUnit 5 -->
 		<dependency>
