@@ -56,7 +56,7 @@ public class PaymentService {
         if((accountBalance + creditLimit) >= amount) {
             accountBalance -= amount;
         }else {
-            throw new AccountNotCoverdException("account not coverd");
+            throw new AccountNotCoverdException("\n account not coverd \n account balance: " + accountBalance);
         }
         
         return accountBalance;

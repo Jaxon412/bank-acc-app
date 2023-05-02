@@ -1,6 +1,6 @@
-# Bank Account Management System
+# Bank Account Management Application
 
-This is a Java-based bank account management system built with Spring Boot. The application allows users to create customer accounts, manage bank accounts, and perform various transactions such as deposits, withdrawals, and transfers between accounts. The system provides a detailed statement of transactions for each account.
+This is a Java-based bank account management system built with Spring Boot. The application allows users to create customer accounts, manage bank accounts, and perform various transactions such as deposits, withdrawals, and transfers between accounts. The system provides a detailed statement of transactions for each bank account. The application supports token-based authentication.
 
 ## Business Processes 
 
@@ -13,27 +13,33 @@ This is a Java-based bank account management system built with Spring Boot. The 
 ![ER-Modell](https://github.com/Jaxon412/bank-acc-app/blob/master/images/er-modell.jpg)
 
 ## Main Components
-* __com.goetz.accsystem.logic:__ 
-Contains a TokenGenerator class for generating unique tokens for customer authentication.
-Contains a IbanGenerator class for generating unique iban for bank account
-* __com.goetz.accsystem.service:__ 
+
+__com.goetz.accsystem.logic:__ 
+* Contains a TokenGenerator class for generating unique tokens for customer authentication.
+* Contains a IbanGenerator class for generating unique IBAN for bank account
+
+__com.goetz.accsystem.service:__ 
 Contains the core services that handle the application logic:
-AccountService: Handles account creation and retrieval of account statements.
-CustomerTokenService: Manages customer registration and authentication.
-PaymentService: Handles deposits and withdrawals.
-TransactionService: Manages transactions including deposits, withdrawals, and transfers.
+* AccountService: Handles account creation and retrieval of account statements.
+* CustomerTokenService: Manages customer registration and authentication.
+* PaymentService: Handles deposits and withdrawals.
+* TransactionService: Manages transactions including deposits, withdrawals, and transfers.
+
 * __com.goetz.accsystem.entity:__ 
 Contains the entity classes that map to the database:
-Account: Represents a bank account.
-Customer: Represents a customer.
-Token: Represents a customer authentication token.
-Transaction: Represents a transaction.
-* __com.goetz.accsystem.dto:__ 
-Contains data transfer objects for communication between the application layers.
-* __com.goetz.accsystem.repository:__ 
-Contains the repository interfaces for database access using Spring Data JPA.
-* __com.goetz.accsystem.exception:__ 
-Contains custom exceptions for handling specific application errors.
+* Account: Represents a bank account.
+* Customer: Represents a customer.
+* Token: Represents a customer authentication token.
+* Transaction: Represents a transaction.
+
+__com.goetz.accsystem.dto:__ 
+* Contains data transfer objects for communication between the application layers.
+
+__com.goetz.accsystem.repository:__ 
+* Contains the repository interfaces for database access using Spring Data JPA.
+
+__com.goetz.accsystem.exception:__ 
+* Contains custom exceptions for handling specific application errors.
 
 ## Tests 
 
@@ -72,12 +78,18 @@ Authenticate customers using a token-based system.
 Create a new bank account for a customer.
 Perform deposits and withdrawals on a bank account.
 Transfer money between two bank accounts.
-Retrieve a detailed account statement, including all transactions.
+Retrieve a detailed account statement, including transactions by start- and end date
 
 ## Testing the API with Swagger UI
 
 To test and interact with the API, you can use Swagger UI. It provides an interactive documentation for the API endpoints, making it easy to understand and test the API without writing any code. The Swagger UI is automatically generated based on your API configuration and can be accessed by navigating to the Swagger UI endpoint 
 (http://localhost:8080/swagger-ui.html) once your application is running.
+
+## Future improvements 
+* Implement JSON Web Token for authorization
+* Implement HTTPS certification
+* Calculate functions for interest rates and account management fees
+* Current accounts with credit limit only for customers over 18
 
 
 ## Dependencies

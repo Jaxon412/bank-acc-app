@@ -1,5 +1,8 @@
 package com.goetz.accsystem.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -48,9 +51,14 @@ public class AccountService {
         return new AccountCreateResponseDTO(savedAccount.getIban(), savedAccount.getAccountType(), savedAccount.getInterestRate(), savedAccount.getCreditLimit());
     }
 
-    public Optional<List<StatementResponseDTO>> getAccountStatement(String iban) {
+    public Optional<List<StatementResponseDTO>> getAccountStatement(String iban, String startDate, String endDate) {
 
-        List<Transaction> transactions = transactionRepository.findAllByAccountIban(iban);
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        LocalDateTime startDateTime = LocalDate.parse(startDate, dateFormatter).atStartOfDay();
+        LocalDateTime endDateTime = LocalDate.parse(endDate, dateFormatter).atTime(23, 59, 59);
+        
+        List<Transaction> transactions = transactionRepository.findByAccountIbanAndDateBetween(iban, startDateTime, endDateTime);
 
         if(transactions.isEmpty()) return Optional.empty();
 

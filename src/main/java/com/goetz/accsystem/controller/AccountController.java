@@ -67,9 +67,9 @@ public class AccountController {
         
         //check if customer has a bank account to iban
         accountService.getAccountByCustomerAndIban(tokenEntity.getCustomer(), statementRequestDTO.iban())
-                              .orElseThrow(()-> new NotFoundException("no bank account found"));
+                                .orElseThrow(()-> new NotFoundException("no bank account found"));
         
-        Optional<List<StatementResponseDTO>> optionalStatementResponses = accountService.getAccountStatement(statementRequestDTO.iban());
+        Optional<List<StatementResponseDTO>> optionalStatementResponses = accountService.getAccountStatement(statementRequestDTO.iban(), statementRequestDTO.startDate(), statementRequestDTO.endDate());
 
         if (optionalStatementResponses.isPresent()) {
 

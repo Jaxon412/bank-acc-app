@@ -48,7 +48,7 @@ public class CustomerController {
 
         //if email and password correct-> response customer his token
         if(customerTokenService.customerExists(email, password)) {
-            String token = customerTokenService.getToken(email, password);
+            String token = customerTokenService.getToken(email);
             return ResponseEntity.ok().header("Authorization", "Bearer " + token).build();
         }
             

@@ -52,9 +52,9 @@ public class CustomerTokenService {
         return savedCustomerDTO;
     }
 
-    public String getToken(String email, String password) throws NotFoundException {
+    public String getToken(String email) throws NotFoundException {
 
-        Customer customer = customerRepository.findByEmailAndPassword(email, password).orElseThrow(()-> new NotFoundException("customer not found"));
+        Customer customer = customerRepository.findByEmail(email).orElseThrow(()-> new NotFoundException("customer not found"));
 
         return customer.getToken().getToken().toString();
     }
@@ -63,8 +63,11 @@ public class CustomerTokenService {
         return (customerRepository.findByEmail(email).isPresent());
     }
 
-    public Boolean customerExists(String email, String password) {
-        return (customerRepository.findByEmailAndPassword(email, password).isPresent());
+    public Boolean customerExists(String email, String password) throws NotFoundException {
+
+        Customer customer = customerRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("customer not found"));
+
+        return passwordEncoder.matches(password, customer.getPassword());
     }
 
     public Optional<Token> getTokenByToken (String token) {
