@@ -25,7 +25,7 @@ Contains the core services that handle the application logic:
 * PaymentService: Handles deposits and withdrawals.
 * TransactionService: Manages transactions including deposits, withdrawals, and transfers.
 
-* __com.goetz.accsystem.entity:__ 
+__com.goetz.accsystem.entity:__ 
 Contains the entity classes that map to the database:
 * Account: Represents a bank account.
 * Customer: Represents a customer.
