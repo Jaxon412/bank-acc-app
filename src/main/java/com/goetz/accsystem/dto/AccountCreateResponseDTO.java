@@ -1,5 +1,7 @@
 package com.goetz.accsystem.dto;
 
+import java.math.BigDecimal;
+
 import com.goetz.accsystem.factory.AccountFactory;
 import com.goetz.accsystem.validation.ValidAccountType;
 
@@ -15,10 +17,9 @@ AccountFactory.AccountType accountType,
 
 //is null for current account
 @Schema(example = "null")
-Double intrestRate,
+BigDecimal intrestRate,
 
 //is null for call deposit account 
 @Schema(example = "10000")
-Double creditLimit
-
+BigDecimal creditLimit
 ) {}

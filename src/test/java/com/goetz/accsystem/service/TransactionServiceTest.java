@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -16,8 +17,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.goetz.accsystem.dto.TransactionDWResponseDTO;
 import com.goetz.accsystem.entity.Account;
 import com.goetz.accsystem.entity.Transaction;
+import com.goetz.accsystem.exception.AccountNotFoundException;
 import com.goetz.accsystem.exception.MaximumDepositException;
-import com.goetz.accsystem.exception.NotFoundException;
 import com.goetz.accsystem.repository.AccountRepository;
 import com.goetz.accsystem.repository.TransactionRepository;
 
@@ -46,15 +47,15 @@ public class TransactionServiceTest {
         account = new Account();
         account.setId(1L);
         account.setIban("DE123456789");
-        account.setCreditLimit(1000d);
+        account.setCreditLimit(new BigDecimal(1000));
     }
 
     @Test
-    public void testAddTransactionDeposit_success() throws NotFoundException, MaximumDepositException {
+    public void testAddTransactionDeposit_success() throws MaximumDepositException, AccountNotFoundException {
         
         String iban = "DE123456789";
-        Double depositAmount = 500d;
-        Double updatedAccountBalance = 1500d;
+        BigDecimal depositAmount = new BigDecimal(500);
+        BigDecimal updatedAccountBalance = new BigDecimal(1500);
 
         //define the behavior of mocks when methods are called 
         when(accountRepository.findAccountByIban(iban)).thenReturn(Optional.of(account));

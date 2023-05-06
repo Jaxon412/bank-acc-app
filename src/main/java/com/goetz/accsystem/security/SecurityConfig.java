@@ -1,4 +1,4 @@
-package com.goetz.accsystem.config;
+package com.goetz.accsystem.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

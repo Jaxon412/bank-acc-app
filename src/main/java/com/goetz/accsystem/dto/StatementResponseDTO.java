@@ -1,5 +1,6 @@
 package com.goetz.accsystem.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.goetz.accsystem.service.TransactionService.TransactionType;
@@ -20,13 +21,13 @@ TransactionType transactionType,
 String purposeOfPayment,
 
 @Schema(example = "10000")
-Double deposit,
+BigDecimal deposit,
 
 @Schema(example = "null")
-Double payout,
+BigDecimal payout,
 
 @Schema(example = "-10000")
-Double accountBalance
+BigDecimal accountBalance
 ){}
 
  

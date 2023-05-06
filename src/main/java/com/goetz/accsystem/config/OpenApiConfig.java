@@ -1,7 +1,6 @@
 package com.goetz.accsystem.config;
 
 import org.springdoc.core.models.GroupedOpenApi;
-
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 

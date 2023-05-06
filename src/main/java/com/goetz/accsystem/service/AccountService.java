@@ -15,7 +15,7 @@ import com.goetz.accsystem.dto.StatementResponseDTO;
 import com.goetz.accsystem.entity.Account;
 import com.goetz.accsystem.entity.Customer;
 import com.goetz.accsystem.entity.Transaction;
-import com.goetz.accsystem.exception.NotFoundException;
+import com.goetz.accsystem.exception.AccountNotFoundException;
 import com.goetz.accsystem.repository.AccountRepository;
 import com.goetz.accsystem.repository.CustomerRepository;
 import com.goetz.accsystem.repository.TransactionRepository;
@@ -35,10 +35,10 @@ public class AccountService {
         this.transactionRepository = transactionRepository;
    }
 
-    public AccountCreateResponseDTO addAccount(Account account, Customer customer) throws NotFoundException {
+    public AccountCreateResponseDTO addAccount(Account account, Customer customer) throws AccountNotFoundException {
         
         //open session: customer must be present
-        Customer managedCustomer = customerRepository.findById(customer.getId()).orElseThrow(()-> new NotFoundException("customer not found"));
+        Customer managedCustomer = customerRepository.findById(customer.getId()).orElseThrow(()-> new AccountNotFoundException("customer not found"));
        
         //create relationship between customer & account
         managedCustomer.setAccount(account);

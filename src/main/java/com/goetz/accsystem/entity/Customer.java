@@ -9,7 +9,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 
 @Entity
 public class Customer {
@@ -20,9 +19,6 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer") 
     private List<Account> accounts = new ArrayList<>(); //relation with "Account"
-
-    @OneToOne(mappedBy = "customer") 
-    private Token token; //relation with "Account"
 
     //Exception falls Email gleich 
     @Column(unique = true, nullable = false)
@@ -100,14 +96,6 @@ public class Customer {
 
     public void setAccount(Account account) {
         this.accounts.add( account);
-    }
-
-    public Token getToken() {
-        return this.token;
-    }
-
-    public void setToken(Token token) {
-        this.token = token;
     }
 
     public Long getId() {

@@ -8,12 +8,12 @@ import jakarta.validation.constraints.NotNull;
 
 public record AccountCreateRequestDTO(
 @Schema(example = "CURRENT_ACCOUNT")
-@NotNull(message = "account type is required")
+@NotNull(message = "Account type is required")
 @ValidAccountType
 AccountFactory.AccountType accountType,
 
 //credit limit for call deposit account always false
 @Schema(example = "TRUE")
-@NotNull(message = "credit limit boolean is required")
+@NotNull(message = "Credit limit boolean is required")
 Boolean creditLimitBoolean
 ) {}

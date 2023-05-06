@@ -2,6 +2,7 @@ package com.goetz.accsystem.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -43,7 +44,7 @@ public class CustomerRepositoryTest {
         //save an Account object to the database with a relationship to the Customer
         Account account = new Account();
         account.setIban("DE12345678901234567890");
-        account.setCreditLimit(0d);
+        account.setCreditLimit(new BigDecimal(0));
         account.setCustomer(savedCustomer);
         accountRepository.save(account);
     }

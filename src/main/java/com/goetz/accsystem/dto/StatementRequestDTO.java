@@ -18,5 +18,4 @@ String startDate,
 @NotNull(message = "Startdate must not be null")
 @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "End Date must be in the format yyyy-MM-dd")
 String endDate
-
 ) {}

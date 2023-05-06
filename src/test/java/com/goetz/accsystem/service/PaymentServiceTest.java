@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -37,42 +38,42 @@ public class PaymentServiceTest {
         //setting objects 
         account = new Account();
         account.setId(1L);
-        account.setCreditLimit(1000d);
+        account.setCreditLimit(new BigDecimal(10000));
 
         transaction = new Transaction();
-        transaction.setAccountBalance(1000d);
+        transaction.setAccountBalance(new BigDecimal(1000));
     }
 
     @Test
     public void testDeposit_success_with_presentTransaction() throws MaximumDepositException {
 
-        Double depositAmount = 500d;
+        BigDecimal depositAmount = new BigDecimal(500);
 
         //define the behavior of mocks when methods are called 
         when(transactionRepository.findLatestTransactionByAccountId(account.getId())).thenReturn(Optional.of(transaction));
 
-        Double updatedAccountBalance = paymentService.deposit(account, depositAmount);
+        BigDecimal updatedAccountBalance = paymentService.deposit(account, depositAmount);
 
-        assertEquals(1500d, updatedAccountBalance);
+        assertEquals(new BigDecimal(1500), updatedAccountBalance);
     }
 
     @Test
     public void testDeposit_success_without_presentTransaction() throws MaximumDepositException {
 
-        Double depositAmount = 500d;
+        BigDecimal depositAmount = new BigDecimal(500);
 
         //define the behavior of mocks when methods are called 
         when(transactionRepository.findLatestTransactionByAccountId(account.getId())).thenReturn(Optional.ofNullable(null));
 
-        Double updatedAccountBalance = paymentService.deposit(account, depositAmount);
+        BigDecimal updatedAccountBalance = paymentService.deposit(account, depositAmount);
 
-        assertEquals(500d, updatedAccountBalance);
+        assertEquals(new BigDecimal(500), updatedAccountBalance);
     }
 
     @Test
     public void testDeposit_maximumDepositException() {
 
-        Double depositAmount = 999999999d;
+        BigDecimal depositAmount = new BigDecimal(999999999d);
         when(transactionRepository.findLatestTransactionByAccountId(account.getId())).thenReturn(Optional.of(transaction));
 
         assertThrows(MaximumDepositException.class, () -> paymentService.deposit(account, depositAmount));
@@ -81,29 +82,29 @@ public class PaymentServiceTest {
     @Test
     public void testWithdraw_success_with_presentTransaction() throws AccountNotCoverdException {
 
-        Double withdrawAmount = 800d;
+        BigDecimal withdrawAmount = new BigDecimal(800);
         when(transactionRepository.findLatestTransactionByAccountId(account.getId())).thenReturn(Optional.of(transaction));
 
-        Double updatedAccountBalance = paymentService.withdraw(account, withdrawAmount);
+        BigDecimal updatedAccountBalance = paymentService.withdraw(account, withdrawAmount);
 
-        assertEquals(200d, updatedAccountBalance);
+        assertEquals(new BigDecimal(200), updatedAccountBalance);
     }
 
     @Test
     public void testWithdraw_success_without_presentTransaction() throws AccountNotCoverdException {
 
-        Double withdrawAmount = 800d;
+        BigDecimal withdrawAmount = new BigDecimal(800);
         when(transactionRepository.findLatestTransactionByAccountId(account.getId())).thenReturn(Optional.ofNullable(null));
 
-        Double updatedAccountBalance = paymentService.withdraw(account, withdrawAmount);
+        BigDecimal updatedAccountBalance = paymentService.withdraw(account, withdrawAmount);
 
-        assertEquals(-800d, updatedAccountBalance);
+        assertEquals(new BigDecimal(-800), updatedAccountBalance);
     }
 
     @Test
     public void testWithdraw_accountNotCoverdException() {
 
-        Double withdrawAmount = 2500d;
+        BigDecimal withdrawAmount = new BigDecimal(25000);
         when(transactionRepository.findLatestTransactionByAccountId(account.getId())).thenReturn(Optional.of(transaction));
 
         assertThrows(AccountNotCoverdException.class, () -> paymentService.withdraw(account, withdrawAmount));

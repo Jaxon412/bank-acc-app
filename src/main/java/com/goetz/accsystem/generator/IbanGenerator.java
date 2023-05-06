@@ -1,4 +1,4 @@
-package com.goetz.accsystem.logic;
+package com.goetz.accsystem.generator;
 
 import java.util.Random;
 
@@ -10,7 +10,6 @@ public class IbanGenerator {
     public String getIban() {
 
         Random random = new Random();
-
         String iban = "DE"; 
 
         Long x = random.nextLong();

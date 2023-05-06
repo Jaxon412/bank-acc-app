@@ -1,27 +1,26 @@
 package com.goetz.accsystem.factory;
 
+import java.math.BigDecimal;
 import java.util.Optional;
-
 import org.springframework.stereotype.Component;
-
 import com.goetz.accsystem.dto.AccountCreateRequestDTO;
 import com.goetz.accsystem.entity.Account;
-import com.goetz.accsystem.logic.IbanGenerator;
+import com.goetz.accsystem.generator.IbanGenerator;
 
 //factory creats current account with and without creditlimit
 //factory creats call deposit account with interest rate
 @Component
 public class AccountFactory {
 
-    private final IbanGenerator ibanGenerator;
+    private static final BigDecimal INTEREST_RATE = new BigDecimal(2.1);
+    private static final BigDecimal CREDIT_LIMIT_TRUE = new BigDecimal(10000);
+    private static final BigDecimal CREDIT_LIMIT_FALSE = new BigDecimal(0);
 
     public enum AccountType {
         CURRENT_ACCOUNT, CALL_DEPOSIT_ACCOUNT;
     }
 
-    private static final Double INTEREST_RATE = 2.1;
-    private static final Double CREDIT_LIMIT_TRUE = 10000d;
-    private static final Double CREDIT_LIMIT_FALSE = 0d;
+    private final IbanGenerator ibanGenerator;
 
     public AccountFactory(IbanGenerator ibanGenerator) {
         this.ibanGenerator = ibanGenerator;
@@ -33,7 +32,8 @@ public class AccountFactory {
         Boolean creditLimit = accountCreateRequestDTO.creditLimitBoolean();
     
         if(accountType.equals(AccountType.CURRENT_ACCOUNT)) {
-            Double creditLimitValue = creditLimit ? CREDIT_LIMIT_TRUE : CREDIT_LIMIT_FALSE;
+
+            BigDecimal creditLimitValue = creditLimit ? CREDIT_LIMIT_TRUE : CREDIT_LIMIT_FALSE;
             return createAccountInstance(accountType, null, creditLimitValue);
         }
         
@@ -44,7 +44,7 @@ public class AccountFactory {
         return Optional.empty();
     }
     
-    private Optional<Account> createAccountInstance(AccountType accountType, Double interstRate, Double creditLimitValue) {
+    private Optional<Account> createAccountInstance(AccountType accountType, BigDecimal interstRate, BigDecimal creditLimitValue) {
 
         Account account = new Account(accountType, ibanGenerator.getIban(), interstRate, creditLimitValue);
         return Optional.of(account);

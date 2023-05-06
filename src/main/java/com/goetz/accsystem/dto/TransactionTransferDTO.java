@@ -1,5 +1,9 @@
 package com.goetz.accsystem.dto;
 
+import java.math.BigDecimal;
+
+import com.goetz.accsystem.validation.DecimalLimit;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -37,7 +41,9 @@ String purposeOfPayment,
 @Schema(example = "10000")
 @NotNull(message = "transfer value must be not null")
 @Min(value = 0, message = "transfer value must be greater than or equal to 0")
-Double transferValue, 
+@DecimalLimit
+BigDecimal transferValue, 
 
 @Schema(example = "-10000",  accessMode = Schema.AccessMode.READ_ONLY)                           
-Double accountBalanceTransmitter) {}
+BigDecimal accountBalanceTransmitter
+) {}

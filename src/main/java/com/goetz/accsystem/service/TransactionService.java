@@ -1,5 +1,7 @@
 package com.goetz.accsystem.service;
 
+import java.math.BigDecimal;
+
 import org.springframework.stereotype.Repository;
 
 import com.goetz.accsystem.dto.TransactionDWResponseDTO;
@@ -7,8 +9,8 @@ import com.goetz.accsystem.dto.TransactionTransferDTO;
 import com.goetz.accsystem.entity.Account;
 import com.goetz.accsystem.entity.Transaction;
 import com.goetz.accsystem.exception.AccountNotCoverdException;
+import com.goetz.accsystem.exception.AccountNotFoundException;
 import com.goetz.accsystem.exception.MaximumDepositException;
-import com.goetz.accsystem.exception.NotFoundException;
 import com.goetz.accsystem.repository.AccountRepository;
 import com.goetz.accsystem.repository.TransactionRepository;
 
@@ -35,13 +37,13 @@ public class TransactionService {
         this.paymentService = paymentService;
     }
 
-    public TransactionDWResponseDTO addTransactionDeposit(String iban, Double amount) throws NotFoundException, MaximumDepositException {
+    public TransactionDWResponseDTO addTransactionDeposit(String iban, BigDecimal amount) throws AccountNotFoundException, MaximumDepositException {
 
         //open session 
         Account managedBankAccount = getManagedBankAccount(iban);
 
         //payment service: execute deposit
-        Double accountBalance = paymentService.deposit(managedBankAccount, amount);
+        BigDecimal accountBalance = paymentService.deposit(managedBankAccount, amount);
 
         //create Transaction 
         Transaction transaction = createTransaction(managedBankAccount, TransactionType.CASH_DEPOSIT, amount, null, accountBalance);
@@ -50,17 +52,17 @@ public class TransactionService {
         transactionRepository.save(transaction);
 
         return  new TransactionDWResponseDTO(managedBankAccount.getIban(), managedBankAccount.getAccountType(),
-                                    transaction.getDeposit(), null,transaction.getAccountBalance());
+                                      transaction.getDeposit(), null,transaction.getAccountBalance());
     }
 
 
-    public TransactionDWResponseDTO addTransactionWithdraw(String iban, Double amount) throws NotFoundException, AccountNotCoverdException {
+    public TransactionDWResponseDTO addTransactionWithdraw(String iban, BigDecimal amount) throws AccountNotFoundException, AccountNotCoverdException {
 
         //open session 
         Account managedBankAccount = getManagedBankAccount(iban);
 
         //payment service: execute withdraw
-        Double accountBalance = paymentService.withdraw(managedBankAccount, amount);
+        BigDecimal accountBalance = paymentService.withdraw(managedBankAccount, amount);
 
         //create Transaction and relationship between Transaction & Account
         Transaction transaction = createTransaction(managedBankAccount, TransactionType.CASH_WITHDRAW, null, amount, accountBalance);
@@ -69,55 +71,51 @@ public class TransactionService {
         transactionRepository.save(transaction);
 
         return new TransactionDWResponseDTO(managedBankAccount.getIban(), managedBankAccount.getAccountType(),
-                                    null, transaction.getPayout(),transaction.getAccountBalance());
+                                       null, transaction.getPayout(),transaction.getAccountBalance());
     }
 
-
-    public TransactionTransferDTO addTransfer(TransactionTransferDTO transferDTO) throws NotFoundException, AccountNotCoverdException, MaximumDepositException {
+    public TransactionTransferDTO addTransfer(TransactionTransferDTO transferDTO) throws AccountNotFoundException, AccountNotCoverdException, MaximumDepositException {
 
         //open session 
         Account managedTransmitterAccount = getManagedBankAccount(transferDTO.transmitterIban());                          
         Account managedReceiverAccount = getManagedBankAccount(transferDTO.receiverIban());
 
-        //payment service: execute withdraw & execute deposit 
-        addTransactionWithdraw(transferDTO.transmitterIban(), transferDTO.transferValue());
-        addTransactionDeposit(transferDTO.receiverIban(), transferDTO.transferValue());
+        //1. withdraw
 
-        //get latest Transactions to set 
-        Transaction latestTransmitterTransaction = getLatestTransactionByAccountId(managedTransmitterAccount.getId());                                                         
-        Transaction latestReceiverTransaction = getLatestTransactionByAccountId(managedReceiverAccount.getId());
-                                                            
-        //set transfer Account
-        latestTransmitterTransaction.setTransferAccount(transferDTO.receiverIban());
-        latestReceiverTransaction.setTransferAccount(transferDTO.transmitterIban());
+        //payment service: execute withdraw
+        BigDecimal accountBalanceTransmitter = paymentService.withdraw(managedTransmitterAccount, transferDTO.transferValue());
 
-        //set purpose of payment 
-        latestReceiverTransaction.setSPorposeOfPayment(transferDTO.purposeOfPayment());
-        latestTransmitterTransaction.setSPorposeOfPayment(transferDTO.purposeOfPayment());
+        //create Transaction and relationship between Transaction & Account
+        Transaction transmitterTransaction = createTransaction(managedTransmitterAccount, TransactionType.TRANSFER_TRANSMITTER, null, transferDTO.transferValue(), accountBalanceTransmitter);
 
-        //set Transaction type 
-        latestTransmitterTransaction.setTransactionType(TransactionType.TRANSFER_TRANSMITTER);
-        latestReceiverTransaction.setTransactionType(TransactionType.TRANSFER_RECEIVER);
+        transmitterTransaction.setTransferAccount(transferDTO.receiverIban()); //set transfer Account
+        transmitterTransaction.setPurposeOfPayment(transferDTO.purposeOfPayment()); //set purpose of payment
+     
+        transactionRepository.save(transmitterTransaction); //Transaction -> DB
 
-        //Transactions -> DB
-        transactionRepository.save(latestReceiverTransaction);
-        transactionRepository.save(latestTransmitterTransaction);
-    
+        //2. deposit 
 
+        //payment service: execute deposit
+        BigDecimal accountBalance = paymentService.deposit(managedReceiverAccount, transferDTO.transferValue());
+
+        //create Transaction 
+        Transaction reveiverTransaction = createTransaction(managedReceiverAccount, TransactionType.TRANSFER_RECEIVER, transferDTO.transferValue(), null, accountBalance);
+
+        reveiverTransaction.setTransferAccount(transferDTO.transmitterIban()); //set transfer Account
+        reveiverTransaction.setPurposeOfPayment(transferDTO.purposeOfPayment()); //set purpose of payment 
+
+        //Transaction -> DB
+        transactionRepository.save(reveiverTransaction);
+        
         return new TransactionTransferDTO(transferDTO.transmitterIban(), transferDTO.firstNameReceiver(), transferDTO.lastNameReceiver(), transferDTO.receiverIban(), 
-                                                       transferDTO.purposeOfPayment(),transferDTO.transferValue() ,latestTransmitterTransaction.getAccountBalance());
+                                                             transferDTO.purposeOfPayment(),transferDTO.transferValue() ,transmitterTransaction.getAccountBalance());
     }
-
     
-    private Account getManagedBankAccount(String iban) throws NotFoundException {
-        return accountRepository.findAccountByIban(iban).orElseThrow(() -> new NotFoundException("no account found"));
+    private Account getManagedBankAccount(String iban) throws AccountNotFoundException {
+        return accountRepository.findAccountByIban(iban).orElseThrow(() -> new AccountNotFoundException("no account found"));
     }
 
-    private Transaction getLatestTransactionByAccountId(Long accountId) throws NotFoundException {
-        return transactionRepository.findLatestTransactionByAccountId(accountId).orElseThrow(() -> new NotFoundException("no transaction found"));
-    }
-
-    private Transaction createTransaction(Account managedBankAccount, TransactionType transactionType, Double deposit, Double payout, Double accountBalance) {
+    private Transaction createTransaction(Account managedBankAccount, TransactionType transactionType, BigDecimal deposit, BigDecimal payout, BigDecimal accountBalance) {
 
         //create Transaction and relationship between Transaction & Account
         Transaction transaction = new Transaction(managedBankAccount);

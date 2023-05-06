@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -46,7 +47,7 @@ public class TransactionRepositoryTest {
         //save Account object to the database with a relationship to Customer
         Account account = new Account();
         account.setIban("DE12345678901234567890");
-        account.setCreditLimit(0d);
+        account.setCreditLimit(new BigDecimal(0));
         account.setCustomer(savedCustomer);
         Account savedAccount = accountRepository.save(account);
 

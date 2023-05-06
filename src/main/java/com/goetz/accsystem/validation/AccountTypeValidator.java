@@ -1,11 +1,10 @@
 package com.goetz.accsystem.validation;
 
 import com.goetz.accsystem.factory.AccountFactory;
-
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class AccountTypeValidator implements ConstraintValidator<ValidAccountType, AccountFactory.AccountType>{
+public class AccountTypeValidator implements ConstraintValidator<ValidAccountType, AccountFactory.AccountType> {
 
     @Override
     public boolean isValid(AccountFactory.AccountType accountType, ConstraintValidatorContext context) {

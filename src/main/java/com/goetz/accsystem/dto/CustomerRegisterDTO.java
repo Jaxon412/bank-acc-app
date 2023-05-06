@@ -24,12 +24,14 @@ public record CustomerRegisterDTO(
     @Schema(example = "Max")
     @NotNull(message = "Firstname must not be null")
     @NotBlank(message = "Firstname must not be blank")
+    @Pattern(regexp = "^[^\\d]*$", message = "Numbers are not allowd")
     @Size(min = 3 , max = 50, message = "The input must be between 3 and 50 characters long.")
     String firstname, 
 
     @Schema(example = "Mustermann")
     @NotNull(message = "Lastname must not be null")
     @NotBlank(message = "Lastname must not be blank")
+    @Pattern(regexp = "^[^\\d]*$", message = "Numbers are not allowd")
     @Size(min = 3 , max = 50, message = "The input must be between 3 and 50 characters long.")
     String lastname, 
 

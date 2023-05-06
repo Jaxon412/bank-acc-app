@@ -1,5 +1,6 @@
 package com.goetz.accsystem.entity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,14 +31,14 @@ public class Account {
     @Column(nullable = false, unique = true)
     private String iban;
 
-    private Double interestRate;
+    private BigDecimal interestRate;
 
     @Column(nullable = false)
-    private Double creditLimit;
+    private BigDecimal creditLimit;
 
     public Account(){};
 
-    public Account(AccountFactory.AccountType accountType, String iban, Double interestRate, Double creditLimit) {
+    public Account(AccountFactory.AccountType accountType, String iban, BigDecimal interestRate, BigDecimal creditLimit) {
         this.accountType = accountType;
         this.iban = iban;
         this.interestRate = interestRate;
@@ -61,11 +62,11 @@ public class Account {
     }
 
 
-    public Double getInterestRate() {
+    public BigDecimal getInterestRate() {
         return this.interestRate;
     }
 
-    public void setInterestRate(Double interestRate) {
+    public void setInterestRate(BigDecimal interestRate) {
         this.interestRate = interestRate;
     }
 
@@ -98,11 +99,11 @@ public class Account {
     }
     
 
-    public Double getCreditLimit() {
+    public BigDecimal getCreditLimit() {
         return this.creditLimit;
     }
 
-    public void setCreditLimit(Double creditLimit) {
+    public void setCreditLimit(BigDecimal creditLimit) {
         this.creditLimit = creditLimit;
     }
 }

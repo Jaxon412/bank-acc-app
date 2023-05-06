@@ -1,5 +1,7 @@
 package com.goetz.accsystem.dto;
 
+import java.math.BigDecimal;
+
 import com.goetz.accsystem.factory.AccountFactory;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,11 +14,12 @@ String iban,
 AccountFactory.AccountType accountType, 
 
 @Schema(example = "10000")
-Double deposit, 
+BigDecimal deposit, 
 
 @Schema(example = "null")
-Double withdraw, 
+BigDecimal withdraw, 
 
 @Schema(example = "-10000")
-Double accountBalance){}
+BigDecimal accountBalance
+){}
     
