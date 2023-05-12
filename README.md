@@ -66,7 +66,6 @@ Contains the entity classes that map to the database:
 
 * Account: Represents a bank account.
 * Customer: Represents a customer.
-* Token: Represents a customer authentication token.
 * Transaction: Represents a transaction.
 
 __com.goetz.accsystem.dto:__ 
