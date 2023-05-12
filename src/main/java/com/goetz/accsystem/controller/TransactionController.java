@@ -90,16 +90,16 @@ public class TransactionController {
         //get Customer by email
         Customer customer = customerService.getCustomer(email).orElseThrow(() -> new CustomerNotFoundException());
 
-        //check if transmitter customer has a bank account to iban
+        //check if transmitter Customer has Account to iban
         accountService.getAccountByCustomerAndIban(customer, transactionTransferDTO.transmitterIban())
                                      .orElseThrow(()-> new AccountNotFoundException("No customer bank account found"));
 
-        //check if reciever customer has a bank account to iban
+        //check if reciever Customer has Account to iban
         customerService.getCustomerByFirstnameAndLastnameAndIban(transactionTransferDTO.firstNameReceiver(), 
                            transactionTransferDTO.lastNameReceiver(), transactionTransferDTO.receiverIban())
                 .orElseThrow(()-> new AccountNotFoundException("Wrong iban, firstname or lastname"));
 
-        //execute transaction
+        //execute Transaction
         TransactionTransferDTO savedTransactionTransferDTO = transactionService.addTransfer(transactionTransferDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedTransactionTransferDTO);

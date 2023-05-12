@@ -7,8 +7,8 @@ import com.goetz.accsystem.dto.AccountCreateRequestDTO;
 import com.goetz.accsystem.entity.Account;
 import com.goetz.accsystem.generator.IbanGenerator;
 
-//factory creats current account with and without creditlimit
-//factory creats call deposit account with interest rate
+//factory creats current Account with/without creditlimit
+//factory creats call deposit Account with interest rate
 @Component
 public class AccountFactory {
 
@@ -28,7 +28,7 @@ public class AccountFactory {
 
     public Optional<Account> createAccount(AccountCreateRequestDTO accountCreateRequestDTO) {
 
-        AccountType accountType = accountCreateRequestDTO.accountType();
+        AccountType accountType = AccountType.valueOf(accountCreateRequestDTO.accountType());
         Boolean creditLimit = accountCreateRequestDTO.creditLimitBoolean();
     
         if(accountType.equals(AccountType.CURRENT_ACCOUNT)) {

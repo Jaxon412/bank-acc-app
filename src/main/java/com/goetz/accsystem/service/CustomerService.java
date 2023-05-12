@@ -47,7 +47,6 @@ public class CustomerService {
     public Boolean customerExists(String email, String password) throws AccountNotFoundException {
 
         Customer customer = customerRepository.findByEmail(email).orElseThrow(() -> new AccountNotFoundException("customer not found"));
-
         return passwordEncoder.matches(password, customer.getPassword());
     }
     

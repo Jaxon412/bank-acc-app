@@ -52,10 +52,10 @@ public class AccountController {
         //get Customer by email
         Customer customer = customerService.getCustomer(email).orElseThrow(() -> new CustomerNotFoundException());
 
-        //create acc with factory 
+        //create Account with factory 
         Account bankaccount = accountFactory.createAccount(accountCreateRequestDTO).orElseThrow(() -> new FailedToCreateAccountException("Failed to create account"));
 
-        //acc -> database
+        //Account -> database
         AccountCreateResponseDTO savedAccountCreateResponseDTO = accountService.addAccount(bankaccount, customer);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedAccountCreateResponseDTO);
@@ -71,7 +71,7 @@ public class AccountController {
         //get Customer by email
         Customer customer = customerService.getCustomer(email).orElseThrow(() -> new CustomerNotFoundException());
 
-        //check if customer has a bank account to iban
+        //check if Customer has Account to iban
         accountService.getAccountByCustomerAndIban(customer, statementRequestDTO.iban())
                                 .orElseThrow(()-> new AccountNotFoundException("No bank account found"));
         

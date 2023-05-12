@@ -20,7 +20,6 @@ public class Customer {
     @OneToMany(mappedBy = "customer") 
     private List<Account> accounts = new ArrayList<>(); //relation with "Account"
 
-    //Exception falls Email gleich 
     @Column(unique = true, nullable = false)
     private String email;
 

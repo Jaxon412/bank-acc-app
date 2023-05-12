@@ -15,11 +15,10 @@ String iban,
 @ValidAccountType
 AccountFactory.AccountType accountType,
 
-//is null for current account
 @Schema(example = "null")
 BigDecimal intrestRate,
 
-//is null for call deposit account 
+
 @Schema(example = "10000")
 BigDecimal creditLimit
 ) {}

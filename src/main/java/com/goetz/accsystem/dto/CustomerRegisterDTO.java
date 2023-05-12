@@ -38,4 +38,5 @@ public record CustomerRegisterDTO(
     @Schema(example = "1998-06-16")
     @NotNull(message = "Birthday must not be null")
     @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "Birthday must be in the format yyyy-MM-dd")
-    String birthday) {}
+    String birthday
+    ) {}

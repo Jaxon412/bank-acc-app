@@ -11,7 +11,7 @@ import com.goetz.accsystem.entity.Transaction;
 
 public interface TransactionRepository extends CrudRepository<Transaction, Long> {
 
-    //search all transaction by iban 
+    //search all Transaction by iban 
     List<Transaction> findAllByAccountIban(String iban);
 
     //SELECT * FROM transaction WHERE account_iban = ? AND date BETWEEN ? AND ?;

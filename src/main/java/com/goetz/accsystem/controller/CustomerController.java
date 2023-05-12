@@ -18,11 +18,11 @@ import jakarta.validation.Valid;
 @RequestMapping("api/customer")
 public class CustomerController {
     
-    private final CustomerService customerTokenService;
+    private final CustomerService customerService;
     private final AuthService authService;
     
     public CustomerController(CustomerService customerService, AuthService authService) {
-        this.customerTokenService = customerService;
+        this.customerService = customerService;
         this.authService = authService;
     }
 
@@ -30,11 +30,11 @@ public class CustomerController {
     @Operation(summary = "register customer")
     public ResponseEntity<CustomerRegisterDTO> register(@Valid @RequestBody CustomerRegisterDTO customerRegisterDTO) throws EmailAlreadyExistException {
         
-        //check if customer exists
-        if (customerTokenService.customerExists(customerRegisterDTO.email())) 
+        //check if Customer exists
+        if (customerService.customerExists(customerRegisterDTO.email())) 
             throw new EmailAlreadyExistException();
         
-        CustomerRegisterDTO savedCustomerDTO = customerTokenService.addCustomer(customerRegisterDTO);
+        CustomerRegisterDTO savedCustomerDTO = customerService.addCustomer(customerRegisterDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCustomerDTO);
     }
 
@@ -43,11 +43,11 @@ public class CustomerController {
     public ResponseEntity<String> login(@RequestHeader ("email") String email, @RequestHeader ("password") String password) throws EmailAlreadyExistException, AccountNotFoundException {
 
         //if email not exsist = true 
-        if (!customerTokenService.customerExists(email)) 
+        if (!customerService.customerExists(email)) 
             throw new EmailAlreadyExistException();
 
-        //if email and password correct-> response customer his token
-        if(customerTokenService.customerExists(email, password)) {
+        //if email and password correct-> response token to Customer
+        if(customerService.customerExists(email, password)) {
             String token = authService.getToken(email);
             return ResponseEntity.ok().header("Authorization", "Bearer " + token).build();
         }

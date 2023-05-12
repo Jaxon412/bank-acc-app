@@ -50,9 +50,10 @@ public class AuthService {
     public Optional<String> validate(String token) {
 
         try {
-
+            
             Jws<Claims> claimsJws = Jwts.parserBuilder().setSigningKey(jwtSecret).build().parseClaimsJws(token);
             String email = claimsJws.getBody().getSubject();
+
             return Optional.of(email);
             
         } catch (JwtException | IllegalArgumentException e) {
@@ -60,7 +61,6 @@ public class AuthService {
         }
     }
     
-
     public SecretKey getJwtSecret() {
         return this.jwtSecret;
     }
